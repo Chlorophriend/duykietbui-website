@@ -1,104 +1,51 @@
 <!DOCTYPE HTML>
-<!--
-	Prologue by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
 <html>
-	<head>
-		<title>Chlorophriend</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}" />
-		<link rel="icon" type="image/png" href="{{ '/images/logo.png' | relative_url }}">
-		<link rel="manifest" href="{{ '/icon_manifest.json' | relative_url }}">
-	</head>
-	<body class="is-preload">
+<head>
+    <title>{{ site.title }}</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}" />
+    <noscript><link rel="stylesheet" href="{{ '/assets/css/noscript.css' | relative_url }}" /></noscript>
+    <link rel="icon" type="image/png" href="{{ '/images/logo.png' | relative_url }}">
+</head>
+<body class="is-preload">
 
-		<!-- Header -->
-			<div id="header">
+    <div id="wrapper" class="fade-in">
 
-				<div class="top">
+        <header id="header">
+            <a href="{{ '/' | relative_url }}" class="logo">{{ site.title }}</a>
+        </header>
 
-					<!-- Logo -->
-						<div id="logo">
-							<span class="image avatar48"><img src="{{ '/images/avatar.jpg' | relative_url }}" alt="" /></span>
-							<h1 id="title">Duy-Kiet (Keir) Bui</h1>
-							<p>Aspiring I/O Psychologist</p>
-						</div>
+        <nav id="nav">
+            <ul class="links">
+                <li class="active"><a href="{{ '/' | relative_url }}">My Portfolio</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+                <ul class="icons">
+                    <li><a href="https://www.linkedin.com/in/kiet-bui-84953b254/" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
+                    <li><a href="https://github.com/Chlorophriend" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+                </ul>
+        </nav>
 
-					<!-- Nav -->
-						<nav id="nav">
-							<ul>
-    <li>
-        <a href="{{ '/#top' | relative_url }}" id="top-link">
-            <span class="icon solid fa-home">Intro</span>
-        </a>
-    </li>
-    <li>
-        <a href="{{ '/#portfolio' | relative_url }}" id="portfolio-link">
-            <span class="icon solid fa-th">Portfolio</span>
-        </a>
-    </li>
-    <li>
-        <a href="{{ '/#about' | relative_url }}" id="about-link">
-            <span class="icon solid fa-user">About Me</span>
-        </a>
-    </li>
-    <li>
-        <a href="{{ '/#contact' | relative_url }}" id="contact-link">
-            <span class="icon solid fa-envelope">Contact</span>
-        </a>
-    </li>
-    
-    <li>
-        <a href="{{ '/blog/' | relative_url }}" id="blog-link">
-            <span class="icon solid fa-pen">Blog</span>
-        </a>
-    </li>
-</ul>
-						</nav>
+        <div id="main">
+            {{ content }}
+        </div>
 
-				</div>
+        <footer id="footer">
+            <div class="copyright">
+                <ul><li>&copy; {{ site.title }}</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+            </div>
+        </footer>
 
-				<div class="bottom">
+    </div>
 
-					<!-- Social Icons -->
-						<ul class="icons">
-							<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-							<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-							<li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
-							<li><a href="#" class="icon brands fa-dribbble"><span class="label">Dribbble</span></a></li>
-							<li><a href="#" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
-						</ul>
+    <script src="{{ '/assets/js/jquery.min.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/jquery.scrollex.min.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/jquery.scrolly.min.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/browser.min.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/breakpoints.min.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/util.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
 
-				</div>
-
-			</div>
-
-		<!-- Main -->
-			<div id="main">
-				{{ content }}
-			</div>
-
-		<!-- Footer -->
-			<div id="footer">
-
-				<!-- Copyright -->
-					<ul class="copyright">
-						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-					</ul>
-
-			</div>
-
-		<!-- Scripts -->
-<script src="{{ '/assets/js/jquery.min.js' | relative_url }}"></script>
-            <script src="{{ '/assets/js/jquery.scrolly.min.js' | relative_url }}"></script>
-            <script src="{{ '/assets/js/jquery.scrollex.min.js' | relative_url }}"></script>
-            <script src="{{ '/assets/js/browser.min.js' | relative_url }}"></script>
-            <script src="{{ '/assets/js/breakpoints.min.js' | relative_url }}"></script>
-            <script src="{{ '/assets/js/util.js' | relative_url }}"></script>
-            <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
-
-	</body>
+</body>
 </html>
