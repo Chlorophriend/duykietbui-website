@@ -1,36 +1,32 @@
 ---
 layout: default
 title: Home
+intro:
+  title: "Duy-Kiet's<br />Portfolio"
+  text: "Aspiring I/O Psychologist | Pixel Art Enthusiast"
 ---
-
-<div id="intro">
-    <span class="image avatar"><img src="{{ '/images/avatar.jpg' | relative_url }}" alt="" style="width: 150px; border-radius: 50%;" /></span>
-    
-    <h1>Duy-Kiet's<br />
-    Portfolio</h1>
-    <p>Aspiring I/O Psychologist | Pixel Art Enthusiast<br />
-    <a href="https://github.com/yourusername">@yourusername</a></p>
-    <ul class="actions">
-        <li><a href="#header" class="button icon solid solo fa-arrow-down scrolly">Continue</a></li>
-    </ul>
-</div>
 
 <section class="post featured">
     <header class="major">
-        <span class="date">{{ site.posts.first.date | date_to_string }}</span>
-        <h2><a href="{{ site.posts.first.url | relative_url }}">{{ site.posts.first.title }}</a></h2>
-        <p>{{ site.posts.first.excerpt }}</p>
+        <h2>My CV</h2>
+        <p>Aspiring I/O Psychologist &amp; Data Science Minor</p>
     </header>
-    {% if site.posts.first.image %}
-    <a href="{{ site.posts.first.url | relative_url }}" class="image main"><img src="{{ site.posts.first.image | relative_url }}" alt="" /></a>
-    {% endif %}
+    
+    <div class="image main">
+        <object data="{{ '/assets/documents/CV_KeirBui_Grad-app_2025 v3.pdf' | relative_url }}" type="application/pdf" width="100%" height="800px">
+            <p>Unable to display PDF file. <a href="{{ '/assets/pdf/cv.pdf' | relative_url }}">Download</a> instead.</p>
+        </object>
+    </div>
+
     <ul class="actions special">
-        <li><a href="{{ site.posts.first.url | relative_url }}" class="button large">Full Story</a></li>
+        <li><a href="{{ '/assets/pdf/cv.pdf' | relative_url }}" class="button large icon solid fa-download">Download CV</a></li>
     </ul>
 </section>
 
 <section class="posts">
-    {% for post in site.posts offset:1 %}
+    {% assign public_posts = site.posts | where_exp: "item", "item.path contains 'public/'" %}
+    
+    {% for post in public_posts %}
     <article>
         <header>
             <span class="date">{{ post.date | date_to_string }}</span>

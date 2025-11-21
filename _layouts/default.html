@@ -20,6 +20,7 @@
             <ul class="links">
                 <li class="active"><a href="{{ '/' | relative_url }}">My Portfolio</a></li>
                 <li><a href="#about">About</a></li>
+                <li class="{% if page.url == '/blog' %}active{% endif %}"><a href="{{ '/blog' | relative_url }}">Secret Blog</a></li>
             </ul>
                 <ul class="icons">
                     <li><a href="https://www.linkedin.com/in/kiet-bui-84953b254/" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
