@@ -6,10 +6,12 @@
 -->
 <html>
 	<head>
-		<title>Prologue by HTML5 UP</title>
+		<title>Chlorophriend</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}" />
+		<link rel="icon" type="image/png" href="{{ '/images/logo.png' | relative_url }}">
+		<link rel="manifest" href="{{ '/icon_manifest.json' | relative_url }}">
 	</head>
 	<body class="is-preload">
 
@@ -20,19 +22,41 @@
 
 					<!-- Logo -->
 						<div id="logo">
-							<span class="image avatar48"><img src="images/avatar.jpg" alt="" /></span>
-							<h1 id="title">Jane Doe</h1>
-							<p>Hyperspace Engineer</p>
+							<span class="image avatar48"><img src="{{ '/images/avatar.jpg' | relative_url }}" alt="" /></span>
+							<h1 id="title">Duy-Kiet (Keir) Bui</h1>
+							<p>Aspiring I/O Psychologist</p>
 						</div>
 
 					<!-- Nav -->
 						<nav id="nav">
 							<ul>
-								<li><a href="#top" id="top-link"><span class="icon solid fa-home">Intro</span></a></li>
-								<li><a href="#portfolio" id="portfolio-link"><span class="icon solid fa-th">Portfolio</span></a></li>
-								<li><a href="#about" id="about-link"><span class="icon solid fa-user">About Me</span></a></li>
-								<li><a href="#contact" id="contact-link"><span class="icon solid fa-envelope">Contact</span></a></li>
-							</ul>
+    <li>
+        <a href="{{ '/#top' | relative_url }}" id="top-link">
+            <span class="icon solid fa-home">Intro</span>
+        </a>
+    </li>
+    <li>
+        <a href="{{ '/#portfolio' | relative_url }}" id="portfolio-link">
+            <span class="icon solid fa-th">Portfolio</span>
+        </a>
+    </li>
+    <li>
+        <a href="{{ '/#about' | relative_url }}" id="about-link">
+            <span class="icon solid fa-user">About Me</span>
+        </a>
+    </li>
+    <li>
+        <a href="{{ '/#contact' | relative_url }}" id="contact-link">
+            <span class="icon solid fa-envelope">Contact</span>
+        </a>
+    </li>
+    
+    <li>
+        <a href="{{ '/blog/' | relative_url }}" id="blog-link">
+            <span class="icon solid fa-pen">Blog</span>
+        </a>
+    </li>
+</ul>
 						</nav>
 
 				</div>
