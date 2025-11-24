@@ -37,7 +37,8 @@ permalink: /blog/
     </header>
 
     <section class="posts">
-        {% for post in site.categories.blog %}
+        {% assign blog_posts = site.posts | where_exp: "item", "item.path contains 'blog/'" %}
+{% for post in blog_posts %}
         <article>
             <header>
                 <span class="date">{{ post.date | date_to_string }}</span>
