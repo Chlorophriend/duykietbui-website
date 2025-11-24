@@ -12,20 +12,38 @@
 
     <div id="wrapper" class="fade-in">
 
+        {% if page.intro %}
+        <div id="intro">
+            <span class="image avatar"><img src="{{ '/images/avatar.jpg' | relative_url }}" alt="" style="width: 150px; border-radius: 50%;" /></span>
+            
+            <h1>{{ page.intro.title }}</h1>
+            <p>{{ page.intro.text }}</p>
+            <ul class="actions">
+                <li><a href="#header" class="button icon solid solo fa-arrow-down scrolly">Continue</a></li>
+            </ul>
+        </div>
+        {% endif %}
+
         <header id="header">
             <a href="{{ '/' | relative_url }}" class="logo">{{ site.title }}</a>
         </header>
 
         <nav id="nav">
             <ul class="links">
-                <li class="active"><a href="{{ '/' | relative_url }}">My Portfolio</a></li>
+                <li class="{% if page.url == '/' %}active{% endif %}">
+                    <a href="{{ '/' | relative_url }}">My Portfolio</a>
+                </li>
+        
                 <li><a href="#about">About</a></li>
-                <li class="{% if page.url == '/blog' %}active{% endif %}"><a href="{{ '/blog' | relative_url }}">Secret Blog</a></li>
+        
+                <li class="{% if page.url contains '/blog' %}active{% endif %}">
+                    <a href="{{ '/blog' | relative_url }}">Secret Blog</a>
+                </li>
             </ul>
-                <ul class="icons">
-                    <li><a href="https://www.linkedin.com/in/kiet-bui-84953b254/" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
-                    <li><a href="https://github.com/Chlorophriend" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
-                </ul>
+            <ul class="icons">
+                <li><a href="https://www.linkedin.com/in/kiet-bui-84953b254/" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
+                <li><a href="https://github.com/Chlorophriend" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+            </ul>
         </nav>
 
         <div id="main">

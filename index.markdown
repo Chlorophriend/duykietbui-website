@@ -3,13 +3,13 @@ layout: default
 title: Home
 intro:
   title: "Duy-Kiet's<br />Portfolio"
-  text: "Aspiring I/O Psychologist | Pixel Art Enthusiast"
+  text: "Aspiring I/O Psychologist"
 ---
 
 <section class="post featured">
     <header class="major">
         <h2>My CV</h2>
-        <p>Aspiring I/O Psychologist &amp; Data Science Minor</p>
+        <p>Aspiring I/O Psychologist &amp; Research Enthusiast</p>
     </header>
     
     <div class="image main">

@@ -36,10 +36,29 @@ permalink: /blog/
         <p>Transformation complete. Welcome inside.</p>
     </header>
 
-    <section class="posts">
+    <div style="text-align: center; margin-bottom: 30px;">
+        <div class="button-group" style="margin-bottom: 15px;">
+            <button class="button small primary" onclick="filterPosts('all', this)">All</button>
+            <button class="button small" onclick="filterPosts('serious', this)">Serious</button>
+            <button class="button small" onclick="filterPosts('daily', this)">Daily</button>
+        </div>
+        
+        <button id="sort-btn" class="button small icon solid fa-sort" onclick="toggleSortOrder()">Sort: Oldest First</button>
+    </div>
+
+    <section class="posts" id="blog-posts-container">
         {% assign blog_posts = site.posts | where_exp: "item", "item.path contains 'blog/'" %}
-{% for post in blog_posts %}
-        <article>
+        
+        {% for post in blog_posts %}
+        
+        {% assign post_category = "uncategorized" %}
+        {% if post.path contains 'blog/serious' %}
+            {% assign post_category = "serious" %}
+        {% elsif post.path contains 'blog/daily' %}
+            {% assign post_category = "daily" %}
+        {% endif %}
+
+        <article class="blog-post-item {{ post_category }}">
             <header>
                 <span class="date">{{ post.date | date_to_string }}</span>
                 <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
@@ -58,36 +77,69 @@ permalink: /blog/
 </div>
 
 <script>
+    // --- PART 1: PASSWORD LOGIC ---
     function checkPassword() {
-        // The answer to the riddle
         const correctPassword = "death"; 
-
-        // Get input and normalize it (trim whitespace, convert to lowercase)
         const input = document.getElementById("password-input").value.trim().toLowerCase();
         
-        const gate = document.getElementById("password-gate");
-        const content = document.getElementById("protected-content");
-        const error = document.getElementById("error-message");
-
         if (input === correctPassword) {
-            // Hide gate, show content
-            gate.style.display = "none";
-            content.style.display = "block";
-            
-            // SESSION STORAGE: Only keeps them logged in while this tab is open.
-            // Closing the tab resets the lock.
+            document.getElementById("password-gate").style.display = "none";
+            document.getElementById("protected-content").style.display = "block";
             sessionStorage.setItem("blogUnlocked", "true");
         } else {
-            // Show error and shake animation effect (optional polish)
-            error.style.display = "block";
-            const inputField = document.getElementById("password-input");
-            inputField.style.borderColor = "#ff6b6b";
+            document.getElementById("error-message").style.display = "block";
+            document.getElementById("password-input").style.borderColor = "#ff6b6b";
         }
     }
 
-    // Check sessionStorage on load (so refreshing the page doesn't lock them out immediately)
     if (sessionStorage.getItem("blogUnlocked") === "true") {
         document.getElementById("password-gate").style.display = "none";
         document.getElementById("protected-content").style.display = "block";
+    }
+
+    // --- PART 2: FILTER LOGIC (NEW) ---
+    function filterPosts(category, btn) {
+        const posts = document.getElementsByClassName("blog-post-item");
+
+        // 1. Show/Hide posts based on category
+        for (let i = 0; i < posts.length; i++) {
+            if (category === 'all') {
+                posts[i].style.display = "block";
+            } else {
+                if (posts[i].classList.contains(category)) {
+                    posts[i].style.display = "block";
+                } else {
+                    posts[i].style.display = "none";
+                }
+            }
+        }
+
+        // 2. Update Button Styles (Visual Feedback)
+        // Reset all filter buttons to normal
+        const buttons = btn.parentElement.getElementsByTagName("button");
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].classList.remove("primary");
+        }
+        // Highlight the clicked button
+        btn.classList.add("primary");
+    }
+
+    // --- PART 3: SORT LOGIC ---
+    function toggleSortOrder() {
+        const container = document.getElementById('blog-posts-container');
+        const articles = Array.from(container.getElementsByClassName('blog-post-item'));
+        const btn = document.getElementById('sort-btn');
+
+        // We use flex order or re-append to sort
+        // Since we are filtering with display:none, re-appending is safest
+        
+        // Detach, Reverse, Re-attach
+        articles.reverse().forEach(article => container.appendChild(article));
+
+        if (btn.innerText.includes('Oldest')) {
+            btn.innerText = "Sort: Newest First";
+        } else {
+            btn.innerText = "Sort: Oldest First";
+        }
     }
 </script>
