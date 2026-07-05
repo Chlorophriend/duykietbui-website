@@ -2,14 +2,24 @@
 layout: default
 title: Secret Blog
 permalink: /blog/
+description: "A private journal of reflections, thoughts, and daily notes. Solve the Gatekeeper's Riddle to unlock."
 ---
 
-<div id="password-gate" style="text-align: center; padding: 50px 20px;">
-    <header class="major">
-        <h2>The Gatekeeper's Riddle</h2>
-    </header>
+<!-- The Gatekeeper's Riddle Password Gate -->
+<div id="password-gate">
+    <!-- Pulsing Keyhole SVG Icon -->
+    <div style="margin-bottom: 25px;">
+        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="var(--accent-color)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="animation: pulse 2s infinite ease-in-out;">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 8a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"></path>
+            <path d="M12 12v4"></path>
+            <path d="M11 16h2"></path>
+        </svg>
+    </div>
+    
+    <h2>The Gatekeeper's Riddle</h2>
 
-    <div style="font-style: italic; font-size: 1.2rem; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+    <div class="riddle-text">
         <p>
             "The Fool must overcome their fear of triskaidekaphobia for the seed to sow.<br />
             I harvest the old so the new may grow.<br />
@@ -18,128 +28,72 @@ permalink: /blog/
         </p>
     </div>
 
-    <form onsubmit="event.preventDefault(); checkPassword();">
-        <input type="text" id="password-input" placeholder="Answer the riddle..." style="max-width: 300px; margin: 0 auto; display: block; text-align: center;">
-        <br>
-        <button type="submit" class="button primary large">Enter</button>
+    <form id="password-form">
+        <input type="text" id="password-input" autocomplete="off" placeholder="Type your answer..." aria-label="Passcode Input">
+        <div style="margin-top: 20px;">
+            <button type="submit" class="button primary">Unlock Archive</button>
+        </div>
     </form>
     
-    <p id="error-message" style="color: #ff6b6b; display: none; margin-top: 15px; font-weight: bold;">
-        That is incorrect. The gate remains closed.
+    <p id="error-message" style="display: none;">
+        That is incorrect. The gate remains locked.
     </p>
 </div>
 
-<div id="protected-content" style="display: none;">
-
-    <header class="major">
-        <h1>The Secret Archive</h1>
-        <p>Transformation complete. Welcome inside.</p>
+<!-- Protected Blog Archive -->
+<div id="protected-content" style="display: none; opacity: 0;">
+    <header style="text-align: center; margin-bottom: 40px;">
+        <h1 style="font-size: 2.5rem; margin-bottom: 10px;">The Secret Archive</h1>
+        <p style="color: var(--text-secondary); font-style: italic;">Transformation complete. Welcome inside.</p>
     </header>
 
-    <div style="text-align: center; margin-bottom: 30px;">
-        <div class="button-group" style="margin-bottom: 15px;">
-            <button class="button small primary" onclick="filterPosts('all', this)">All</button>
-            <button class="button small" onclick="filterPosts('serious', this)">Serious</button>
-            <button class="button small" onclick="filterPosts('daily', this)">Daily</button>
+    <!-- Filter and Sorting Bar -->
+    <div class="filter-sorting-bar">
+        <div class="button-group">
+            <button class="button active" onclick="filterPosts('all', this)">All</button>
+            <button class="button" onclick="filterPosts('serious', this)">Serious</button>
+            <button class="button" onclick="filterPosts('daily', this)">Daily</button>
         </div>
         
-        <button id="sort-btn" class="button small icon solid fa-sort" onclick="toggleSortOrder()">Sort: Oldest First</button>
+        <button id="sort-btn" class="button" onclick="toggleSortOrder()">Sort: Oldest First</button>
     </div>
 
-    <section class="posts" id="blog-posts-container">
+    <!-- Posts Grid -->
+    <section class="posts-grid" id="blog-posts-container">
         {% assign blog_posts = site.posts | where_exp: "item", "item.path contains 'blog/'" %}
         
         {% for post in blog_posts %}
-        
-        {% assign post_category = "uncategorized" %}
-        {% if post.path contains 'blog/serious' %}
-            {% assign post_category = "serious" %}
-        {% elsif post.path contains 'blog/daily' %}
-            {% assign post_category = "daily" %}
-        {% endif %}
-
-        <article class="blog-post-item {{ post_category }}">
-            <header>
-                <span class="date">{{ post.date | date_to_string }}</span>
-                <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
-            </header>
-            {% if post.image %}
-            <a href="{{ post.url | relative_url }}" class="image fit"><img src="{{ post.image | relative_url }}" alt="" /></a>
+            {% assign post_category = "uncategorized" %}
+            {% if post.path contains 'blog/serious' %}
+                {% assign post_category = "serious" %}
+            {% elsif post.path contains 'blog/daily' %}
+                {% assign post_category = "daily" %}
             {% endif %}
-            <p>{{ post.excerpt }}</p>
-            <ul class="actions special">
-                <li><a href="{{ post.url | relative_url }}" class="button">Read Entry</a></li>
-            </ul>
-        </article>
+
+            <article class="blog-post-item {{ post_category }}">
+                {% if post.image %}
+                <a href="{{ post.url | relative_url }}" class="image-fit">
+                    <img src="{{ post.image | relative_url }}" alt="{{ post.title }}" />
+                </a>
+                {% endif %}
+                
+                <div class="post-content">
+                    <span class="date">{{ post.date | date_to_string }}</span>
+                    <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+                    <p>{{ post.excerpt | strip_html | truncatewords: 25 }}</p>
+                    <div class="actions">
+                        <a href="{{ post.url | relative_url }}" class="button">Read Entry</a>
+                    </div>
+                </div>
+            </article>
         {% endfor %}
     </section>
-
 </div>
 
-<script>
-    // --- PART 1: PASSWORD LOGIC ---
-    function checkPassword() {
-        const correctPassword = "death"; 
-        const input = document.getElementById("password-input").value.trim().toLowerCase();
-        
-        if (input === correctPassword) {
-            document.getElementById("password-gate").style.display = "none";
-            document.getElementById("protected-content").style.display = "block";
-            sessionStorage.setItem("blogUnlocked", "true");
-        } else {
-            document.getElementById("error-message").style.display = "block";
-            document.getElementById("password-input").style.borderColor = "#ff6b6b";
-        }
-    }
-
-    if (sessionStorage.getItem("blogUnlocked") === "true") {
-        document.getElementById("password-gate").style.display = "none";
-        document.getElementById("protected-content").style.display = "block";
-    }
-
-    // --- PART 2: FILTER LOGIC (NEW) ---
-    function filterPosts(category, btn) {
-        const posts = document.getElementsByClassName("blog-post-item");
-
-        // 1. Show/Hide posts based on category
-        for (let i = 0; i < posts.length; i++) {
-            if (category === 'all') {
-                posts[i].style.display = "block";
-            } else {
-                if (posts[i].classList.contains(category)) {
-                    posts[i].style.display = "block";
-                } else {
-                    posts[i].style.display = "none";
-                }
-            }
-        }
-
-        // 2. Update Button Styles (Visual Feedback)
-        // Reset all filter buttons to normal
-        const buttons = btn.parentElement.getElementsByTagName("button");
-        for (let i = 0; i < buttons.length; i++) {
-            buttons[i].classList.remove("primary");
-        }
-        // Highlight the clicked button
-        btn.classList.add("primary");
-    }
-
-    // --- PART 3: SORT LOGIC ---
-    function toggleSortOrder() {
-        const container = document.getElementById('blog-posts-container');
-        const articles = Array.from(container.getElementsByClassName('blog-post-item'));
-        const btn = document.getElementById('sort-btn');
-
-        // We use flex order or re-append to sort
-        // Since we are filtering with display:none, re-appending is safest
-        
-        // Detach, Reverse, Re-attach
-        articles.reverse().forEach(article => container.appendChild(article));
-
-        if (btn.innerText.includes('Oldest')) {
-            btn.innerText = "Sort: Newest First";
-        } else {
-            btn.innerText = "Sort: Oldest First";
-        }
-    }
-</script>
+<!-- Inline keyframe styling for keyhole pulsing -->
+<style>
+@keyframes pulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); filter: drop-shadow(0 0 2px rgba(139, 92, 246, 0.2)); }
+    50% { opacity: 1; transform: scale(1.08); filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.6)); }
+}
+</style>

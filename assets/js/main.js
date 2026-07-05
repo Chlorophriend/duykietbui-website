@@ -1,258 +1,184 @@
-/*
-	Massively by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
-*/
-
-(function($) {
-
-	var	$window = $(window),
-		$body = $('body'),
-		$wrapper = $('#wrapper'),
-		$header = $('#header'),
-		$nav = $('#nav'),
-		$main = $('#main'),
-		$navPanelToggle, $navPanel, $navPanelInner;
-
-	// Breakpoints.
-		breakpoints({
-			default:   ['1681px',   null       ],
-			xlarge:    ['1281px',   '1680px'   ],
-			large:     ['981px',    '1280px'   ],
-			medium:    ['737px',    '980px'    ],
-			small:     ['481px',    '736px'    ],
-			xsmall:    ['361px',    '480px'    ],
-			xxsmall:   [null,       '360px'    ]
-		});
-
-	/**
-	 * Applies parallax scrolling to an element's background image.
-	 * @return {jQuery} jQuery object.
-	 */
-	$.fn._parallax = function(intensity) {
-
-		var	$window = $(window),
-			$this = $(this);
-
-		if (this.length == 0 || intensity === 0)
-			return $this;
-
-		if (this.length > 1) {
-
-			for (var i=0; i < this.length; i++)
-				$(this[i])._parallax(intensity);
-
-			return $this;
-
-		}
-
-		if (!intensity)
-			intensity = 0.25;
-
-		$this.each(function() {
-
-			var $t = $(this),
-				$bg = $('<div class="bg"></div>').appendTo($t),
-				on, off;
-
-			on = function() {
-
-				$bg
-					.removeClass('fixed')
-					.css('transform', 'matrix(1,0,0,1,0,0)');
-
-				$window
-					.on('scroll._parallax', function() {
-
-						var pos = parseInt($window.scrollTop()) - parseInt($t.position().top);
-
-						$bg.css('transform', 'matrix(1,0,0,1,0,' + (pos * intensity) + ')');
-
-					});
-
-			};
-
-			off = function() {
-
-				$bg
-					.addClass('fixed')
-					.css('transform', 'none');
-
-				$window
-					.off('scroll._parallax');
-
-			};
-
-			// Disable parallax on ..
-				if (browser.name == 'ie'			// IE
-				||	browser.name == 'edge'			// Edge
-				||	window.devicePixelRatio > 1		// Retina/HiDPI (= poor performance)
-				||	browser.mobile)					// Mobile devices
-					off();
-
-			// Enable everywhere else.
-				else {
-
-					breakpoints.on('>large', on);
-					breakpoints.on('<=large', off);
-
-				}
-
-		});
-
-		$window
-			.off('load._parallax resize._parallax')
-			.on('load._parallax resize._parallax', function() {
-				$window.trigger('scroll');
-			});
-
-		return $(this);
-
-	};
-
-	// Play initial animations on page load.
-		$window.on('load', function() {
-			window.setTimeout(function() {
-				$body.removeClass('is-preload');
-			}, 100);
-		});
-
-	// Scrolly.
-		$('.scrolly').scrolly();
-
-	// Background.
-		$wrapper._parallax(0.925);
-
-	// Nav Panel.
-
-		// Toggle.
-			$navPanelToggle = $(
-				'<a href="#navPanel" id="navPanelToggle">Menu</a>'
-			)
-				.appendTo($wrapper);
-
-			// Change toggle styling once we've scrolled past the header.
-				$header.scrollex({
-					bottom: '5vh',
-					enter: function() {
-						$navPanelToggle.removeClass('alt');
-					},
-					leave: function() {
-						$navPanelToggle.addClass('alt');
-					}
-				});
-
-		// Panel.
-			$navPanel = $(
-				'<div id="navPanel">' +
-					'<nav>' +
-					'</nav>' +
-					'<a href="#navPanel" class="close"></a>' +
-				'</div>'
-			)
-				.appendTo($body)
-				.panel({
-					delay: 500,
-					hideOnClick: true,
-					hideOnSwipe: true,
-					resetScroll: true,
-					resetForms: true,
-					side: 'right',
-					target: $body,
-					visibleClass: 'is-navPanel-visible'
-				});
-
-			// Get inner.
-				$navPanelInner = $navPanel.children('nav');
-
-			// Move nav content on breakpoint change.
-				var $navContent = $nav.children();
-
-				breakpoints.on('>medium', function() {
-
-					// NavPanel -> Nav.
-						$navContent.appendTo($nav);
-
-					// Flip icon classes.
-						$nav.find('.icons, .icon')
-							.removeClass('alt');
-
-				});
-
-				breakpoints.on('<=medium', function() {
-
-					// Nav -> NavPanel.
-						$navContent.appendTo($navPanelInner);
-
-					// Flip icon classes.
-						$navPanelInner.find('.icons, .icon')
-							.addClass('alt');
-
-				});
-
-			// Hack: Disable transitions on WP.
-				if (browser.os == 'wp'
-				&&	browser.osVersion < 10)
-					$navPanel
-						.css('transition', 'none');
-
-	// Intro.
-		var $intro = $('#intro');
-
-		if ($intro.length > 0) {
-
-			// Hack: Fix flex min-height on IE.
-				if (browser.name == 'ie') {
-					$window.on('resize.ie-intro-fix', function() {
-
-						var h = $intro.height();
-
-						if (h > $window.height())
-							$intro.css('height', 'auto');
-						else
-							$intro.css('height', h);
-
-					}).trigger('resize.ie-intro-fix');
-				}
-
-			// Hide intro on scroll (> small).
-				breakpoints.on('>small', function() {
-
-					$main.unscrollex();
-
-					$main.scrollex({
-						mode: 'bottom',
-						top: '25vh',
-						bottom: '-50vh',
-						enter: function() {
-							$intro.addClass('hidden');
-						},
-						leave: function() {
-							$intro.removeClass('hidden');
-						}
-					});
-
-				});
-
-			// Hide intro on scroll (<= small).
-				breakpoints.on('<=small', function() {
-
-					$main.unscrollex();
-
-					$main.scrollex({
-						mode: 'middle',
-						top: '15vh',
-						bottom: '-15vh',
-						enter: function() {
-							$intro.addClass('hidden');
-						},
-						leave: function() {
-							$intro.removeClass('hidden');
-						}
-					});
-
-			});
-
-		}
-
-})(jQuery);
+/**
+ * Duy-Kiet (Keir) Bui - Portfolio Website Javascript
+ * Custom Vanilla JS implementation for theme toggle, mobile navigation,
+ * password gate, and blog filtering/sorting.
+ */
+
+document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
+    initMobileNav();
+    initPasswordGate();
+    initBlogFilters();
+});
+
+/* ==========================================
+   1. Theme Management (Light / Dark Mode)
+   ========================================== */
+function initTheme() {
+    const themeToggle = document.getElementById('theme-toggle');
+    if (!themeToggle) return;
+
+    // Check localStorage or system preference
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    // Set initial theme (default to dark mode if nothing is saved)
+    if (savedTheme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        themeToggle.innerHTML = '🌙'; // Moon icon for switching to dark
+    } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggle.innerHTML = '☀️'; // Sun icon for switching to light
+    }
+
+    // Toggle theme on click
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        if (currentTheme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            themeToggle.innerHTML = '☀️';
+            themeToggle.setAttribute('aria-label', 'Switch to light mode');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+            themeToggle.innerHTML = '🌙';
+            themeToggle.setAttribute('aria-label', 'Switch to dark mode');
+        }
+    });
+}
+
+/* ==========================================
+   2. Mobile Navigation Toggle
+   ========================================== */
+function initMobileNav() {
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks = document.querySelector('#nav .links');
+    
+    if (!navToggle || !navLinks) return;
+
+    navToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+        navToggle.setAttribute('aria-expanded', !expanded);
+        navLinks.classList.toggle('open');
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (navLinks.classList.contains('open') && !navLinks.contains(e.target) && e.target !== navToggle) {
+            navToggle.setAttribute('aria-expanded', 'false');
+            navLinks.classList.remove('open');
+        }
+    });
+}
+
+/* ==========================================
+   3. Password Gate (Secret Blog)
+   ========================================== */
+function initPasswordGate() {
+    const gate = document.getElementById('password-gate');
+    const content = document.getElementById('protected-content');
+    const form = document.getElementById('password-form');
+    const input = document.getElementById('password-input');
+    const errorMsg = document.getElementById('error-message');
+
+    if (!gate || !content) return;
+
+    // Check if session already unlocked
+    if (sessionStorage.getItem('blogUnlocked') === 'true') {
+        gate.style.display = 'none';
+        content.style.display = 'block';
+        content.style.opacity = '1';
+        return;
+    }
+
+    if (form && input) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const correctPassword = 'death';
+            const val = input.value.trim().toLowerCase();
+
+            if (val === correctPassword) {
+                // Success animation
+                errorMsg.style.display = 'none';
+                input.style.borderColor = 'var(--accent-color)';
+                
+                // Set unlock in session
+                sessionStorage.setItem('blogUnlocked', 'true');
+
+                // Smooth CSS transition
+                gate.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                gate.style.opacity = '0';
+                gate.style.transform = 'translateY(-20px)';
+
+                setTimeout(() => {
+                    gate.style.display = 'none';
+                    content.style.display = 'block';
+                    content.style.opacity = '0';
+                    // Trigger reflow to start fade-in
+                    content.offsetHeight; 
+                    content.style.transition = 'opacity 0.5s ease';
+                    content.style.opacity = '1';
+                }, 500);
+            } else {
+                // Error display
+                errorMsg.style.display = 'block';
+                input.style.borderColor = '#ff4a4a';
+                input.classList.add('shake');
+                setTimeout(() => input.classList.remove('shake'), 500);
+            }
+        });
+    }
+}
+
+/* ==========================================
+   4. Blog Filtering & Sorting
+   ========================================== */
+let currentFilter = 'all';
+
+function initBlogFilters() {
+    window.filterPosts = function(category, btn) {
+        currentFilter = category;
+        const posts = document.querySelectorAll('.blog-post-item');
+        
+        // Hide/Show based on category
+        posts.forEach(post => {
+            if (category === 'all') {
+                post.style.display = 'flex';
+            } else {
+                if (post.classList.contains(category)) {
+                    post.style.display = 'flex';
+                } else {
+                    post.style.display = 'none';
+                }
+            }
+        });
+
+        // Toggle active button style
+        if (btn && btn.parentElement) {
+            const buttons = btn.parentElement.querySelectorAll('button');
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+    };
+
+    window.toggleSortOrder = function() {
+        const container = document.getElementById('blog-posts-container');
+        if (!container) return;
+
+        const articles = Array.from(container.getElementsByClassName('blog-post-item'));
+        const btn = document.getElementById('sort-btn');
+
+        // Reverse the order of articles
+        articles.reverse().forEach(article => container.appendChild(article));
+
+        if (btn) {
+            if (btn.textContent.includes('Oldest')) {
+                btn.textContent = 'Sort: Newest First';
+            } else {
+                btn.textContent = 'Sort: Oldest First';
+            }
+        }
+    };
+}

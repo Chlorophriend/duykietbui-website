@@ -18,7 +18,7 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: Chlorophriend
+title: Duy-Kiet (Keir) Bui
 email: student.duykietbui@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   I am an aspiring I/O psychologist born in Vietnam. I graduated with a BSc in Psychology (Honours) and Minor in Data Science.
