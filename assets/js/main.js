@@ -2,6 +2,7 @@
  * Duy-Kiet (Keir) Bui - Portfolio Website Javascript
  * Custom Vanilla JS implementation for theme toggle, mobile navigation,
  * password gate, and blog filtering/sorting.
+ * Safe wrappers are included to prevent SecurityErrors when running locally via file://
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -12,6 +13,32 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ==========================================
+   Safe Web Storage Wrappers (for file:// protocol support)
+   ========================================== */
+function safeGetItem(storageType, key) {
+    try {
+        const storage = window[storageType];
+        return storage ? storage.getItem(key) : null;
+    } catch (e) {
+        console.warn(`Web storage (${storageType}) is blocked:`, e);
+        return null;
+    }
+}
+
+function safeSetItem(storageType, key, value) {
+    try {
+        const storage = window[storageType];
+        if (storage) {
+            storage.setItem(key, value);
+            return true;
+        }
+    } catch (e) {
+        console.warn(`Web storage (${storageType}) set failed:`, e);
+    }
+    return false;
+}
+
+/* ==========================================
    1. Theme Management (Light / Dark Mode)
    ========================================== */
 function initTheme() {
@@ -19,8 +46,7 @@ function initTheme() {
     if (!themeToggle) return;
 
     // Check localStorage or system preference
-    const savedTheme = localStorage.getItem('theme');
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const savedTheme = safeGetItem('localStorage', 'theme');
     
     // Set initial theme (default to dark mode if nothing is saved)
     if (savedTheme === 'light') {
@@ -36,12 +62,12 @@ function initTheme() {
         const currentTheme = document.documentElement.getAttribute('data-theme');
         if (currentTheme === 'light') {
             document.documentElement.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
+            safeSetItem('localStorage', 'theme', 'dark');
             themeToggle.innerHTML = '☀️';
             themeToggle.setAttribute('aria-label', 'Switch to light mode');
         } else {
             document.documentElement.setAttribute('data-theme', 'light');
-            localStorage.setItem('theme', 'light');
+            safeSetItem('localStorage', 'theme', 'light');
             themeToggle.innerHTML = '🌙';
             themeToggle.setAttribute('aria-label', 'Switch to dark mode');
         }
@@ -86,7 +112,7 @@ function initPasswordGate() {
     if (!gate || !content) return;
 
     // Check if session already unlocked
-    if (sessionStorage.getItem('blogUnlocked') === 'true') {
+    if (safeGetItem('sessionStorage', 'blogUnlocked') === 'true') {
         gate.style.display = 'none';
         content.style.display = 'block';
         content.style.opacity = '1';
@@ -105,7 +131,7 @@ function initPasswordGate() {
                 input.style.borderColor = 'var(--accent-color)';
                 
                 // Set unlock in session
-                sessionStorage.setItem('blogUnlocked', 'true');
+                safeSetItem('sessionStorage', 'blogUnlocked', 'true');
 
                 // Smooth CSS transition
                 gate.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
